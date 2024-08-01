@@ -1,0 +1,60 @@
+1)  https://github.com/suvarnasomvanshi/Driver_Website/blob/frontend/src/App.js
+
+/*  deleting default scrollbar styling */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+  <div
+      style={{ scrollBehavior: "smooth" }}
+      className="App  w-screen relative"
+    >
+      <Routes>
+        {/*  unique IDS */}
+        <Route path="/" element={<Homepage />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/clients" element={<Clients />} /
+        <Route path="/products/:type" element={<Products />}></Route>
+      </Routes>
+      <Toaster />
+    </div>
+
+
+
+2)
+/// in useWindowScrollPositions.js
+
+import { useEffect, useState } from 'react'
+
+export const useWindowScrollPositions = () => {
+   const [scrollPosition, setPosition] = useState({ scrollX: 0, scrollY: 0 })
+   
+   useEffect(() => {
+    function updatePosition() {
+        setPosition({ scrollX: window.scrollX, scrollY: window.scrollY })
+    }
+
+    window.addEventListener('scroll', updatePosition)
+    updatePosition()
+
+    return () => window.removeEventListener('scroll', updatePosition)
+   }, [])
+
+   return scrollPosition
+}
+
+
+Combining some of the other answers, this is exactly what is needed here. Simply use this hook to get the scrollX (horizontal) and scrollY (vertical) positions from the window. It'll be updated as the user scrolls.
+
+
+Then call the hook in your function component:
+
+/// in MyComponent.jsx
+
+import { useWindowScrollPositions } from 'path/to/useWindowScrollPositions'
+
+export const MyComponent = () => {
+   const { scrollX, scrollY } = useWindowScrollPositions()
+   
+   return <div>Scroll position is ({scrollX}, {scrollY})</div>
+} 
